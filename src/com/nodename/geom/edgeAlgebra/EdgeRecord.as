@@ -1,6 +1,8 @@
 package com.nodename.geom.edgeAlgebra
 {
 	import com.nodename.utils.IDisposable;
+	
+	import org.hamcrest.object.nullValue;
 
 	// The EdgeRecord represents eight QuadEdges: the four oriented and directed versions of an undirected edge and of its dual
 	public final class EdgeRecord implements IDisposable
@@ -69,16 +71,9 @@ package com.nodename.geom.edgeAlgebra
 
 			for (index = 0; index < 4; index++)
 			{
-				if (index == LEFT_FACE)
-				{
-					_nodePairs[index] = _nodePairs[RIGHT_FACE];
-				}
-				else
-				{
-					var node0:Node = new Node(this, index, 0);
-					var node1:Node = new Node(this, index, 1);
-					_nodePairs[index] = new NodePair(node0, node1);
-				}
+				var node0:Node = new Node(this, index, 0, index == LEFT_FACE ? node(RIGHT_FACE, 0) : null);
+				var node1:Node = new Node(this, index, 1, index == LEFT_FACE ? node(RIGHT_FACE, 1) : null);
+				_nodePairs[index] = new NodePair(node0, node1);
 			}
 			
 			_edgePairs = new Vector.<EdgePair>(4, true);
@@ -113,7 +108,7 @@ package com.nodename.geom.edgeAlgebra
 				.addCwEdge(quadEdge(1, 1))
 				.addLeavingEdge(quadEdge(2, 1))
 				.addCcwEdge(quadEdge(3, 1));
-			
+				
 			_nodePairs[RIGHT_FACE].node(0)
 				.addCwEdge(quadEdge(0, 0))
 				.addLeavingEdge(quadEdge(1, 0))
@@ -137,6 +132,7 @@ package com.nodename.geom.edgeAlgebra
 				.addEnteringEdge(quadEdge(1, 1))
 				.addCwEdge(quadEdge(2, 1))
 				.addLeavingEdge(quadEdge(3, 1));
+
 			
 			for (index = 0; index < 4; index++)
 			{

@@ -100,14 +100,14 @@ package flexUnitTests
 			trace(_edge);
 			const leftFaceDualShouldBe:Node = _edge.dual.originVertex;
 			const leftFace:Node = _edge.leftFace;
-			//assertThat(_edge.leftFace.dual, strictlyEqualTo(_edge.dual.originVertex));
-			assertThat(leftFace.dual, strictlyEqualTo(leftFaceDualShouldBe));
+			assertThat(_edge.leftFace.dual(_edge), strictlyEqualTo(_edge.dual.originVertex));
+			//assertThat(leftFace.dual, strictlyEqualTo(leftFaceDualShouldBe));
 		}
 		
 		[Test]
 		public function dualDefinition_VertexToFace():void
 		{
-			assertThat(_edge.originVertex.dual, strictlyEqualTo(_edge.dual.leftFace));
+			assertThat(_edge.originVertex.dual(_edge), strictlyEqualTo(_edge.dual.leftFace));
 		}
 		
 		[Test]
@@ -259,13 +259,14 @@ package flexUnitTests
 			const leftFace:Node = _edge.leftFace;
 			const rotMinus1:QuadEdge = _edge.rot(-1);
 			const originVertex:Node = rotMinus1.originVertex;
-			assertThat(_edge.leftFace, strictlyEqualTo(_edge.rot(-1).originVertex));
+			//assertThat(_edge.leftFace.equals(_edge.rot(-1).originVertex));
+			assertThat(leftFace.equals(originVertex));
 		}
 		
 		[Test]
 		public function rightDefinition():void
 		{
-			assertThat(_edge.rightFace, strictlyEqualTo(_edge.rot().originVertex));
+			assertThat(_edge.rightFace.equals(_edge.rot().originVertex));
 		}
 		
 		[Test]
@@ -277,26 +278,26 @@ package flexUnitTests
 		[Test]
 		public function nextProperty1():void
 		{
-			assertThat(_edge.lNext().leftFace, strictlyEqualTo(_edge.leftFace));
+			assertThat(_edge.lNext().leftFace.equals(_edge.leftFace));
 		}
 		
 		[Test]
 		public function nextProperty2():void
 		{
-			assertThat(_edge.rNext().rightFace, strictlyEqualTo(_edge.rightFace));
+			assertThat(_edge.rNext().rightFace.equals(_edge.rightFace));
 		}
 		
 		[Test]
 		public function nextProperty3():void
 		{
-			assertThat(_edge.dNext().destVertex, strictlyEqualTo(_edge.destVertex));
+			assertThat(_edge.dNext().destVertex.equals(_edge.destVertex));
 		}
 		
 		[Test]
 		public function nextProperty4():void
 		{
 			// NB This one is different from the other three!
-			assertThat(_edge.rNext().destVertex, strictlyEqualTo(_edge.originVertex));
+			assertThat(_edge.rNext().destVertex.equals(_edge.originVertex));
 		}
 		
 		[Test]

@@ -46,7 +46,7 @@ package flexUnitTests
 		[Test]
 		public function newEdge_LeftFaceEqualsRightFace():void
 		{
-			assertThat(_newEdge.leftFace, strictlyEqualTo(_newEdge.rightFace));
+			assertThat(_newEdge.leftFace.equals(_newEdge.rightFace));
 		}		
 		
 		[Test]
@@ -76,7 +76,7 @@ package flexUnitTests
 		[Test]
 		public function newEdgeRot_OriginVertexEqualsDestVertex():void
 		{
-			assertThat(_newEdgeRot.originVertex, strictlyEqualTo(_newEdgeRot.destVertex));
+			assertThat(_newEdgeRot.originVertex.equals(_newEdgeRot.destVertex));
 		}
 		
 		[Test]

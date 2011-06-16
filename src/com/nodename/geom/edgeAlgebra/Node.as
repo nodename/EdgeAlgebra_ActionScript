@@ -6,7 +6,8 @@ package com.nodename.geom.edgeAlgebra
 	public final class Node implements IDisposable
 	{
 		// in ccw order:
-		//private var _edgeRecords:Vector.<EdgeRecord>;
+		
+		private var _edgeLists:EdgeLists;
 		
 		private var _leavingEdges:Vector.<QuadEdge>;
 		private var _enteringEdges:Vector.<QuadEdge>;
@@ -27,7 +28,7 @@ package com.nodename.geom.edgeAlgebra
 		
 		public function dispose():void
 		{
-			//_edgeRecords = null;
+			_edgeLists = null;
 			_leavingEdges = null;
 			_enteringEdges = null;
 			_ccwEdges = null;
@@ -36,16 +37,22 @@ package com.nodename.geom.edgeAlgebra
 		
 		private static var NEXT_INDEX:uint = 0;
 		public var index:uint;
-		public function Node(edgeRecord:EdgeRecord, r:uint, f:uint)
+		public function Node(edgeRecord:EdgeRecord, r:uint, f:uint, cloneOf:Node=null)
 		{
 			index = NEXT_INDEX++;
-			//_edgeRecords = new Vector.<EdgeRecord>();
-			_leavingEdges = new Vector.<QuadEdge>();
-			_enteringEdges = new Vector.<QuadEdge>();
-			_ccwEdges = new Vector.<QuadEdge>();
-			_cwEdges = new Vector.<QuadEdge>();
+			_edgeLists = cloneOf ? cloneOf._edgeLists : new EdgeLists();
+			
+			_leavingEdges = _edgeLists.leavingEdges;
+			_enteringEdges = _edgeLists.enteringEdges;
+			_ccwEdges = _edgeLists.ccwEdges;
+			_cwEdges = _edgeLists.cwEdges;
 			
 			addEdgeRecord(edgeRecord, r, f);
+		}
+		
+		public function equals(other:Node):Boolean
+		{
+			return other._edgeLists == this._edgeLists;
 		}
 		
 		public function toString():String
@@ -116,20 +123,45 @@ package com.nodename.geom.edgeAlgebra
 			return list[nextIndex];
 		}
 		
-		public function get dual():Node
+		public function dual(edge:QuadEdge):Node
 		{
-			return null;
-			
-			/*var edge:QuadEdge;
-			if (_r % 2 == 0)
+			var result:Node = null;
+			var dual:QuadEdge = edge.dual;
+			const myRelationshipToEdge:uint = (_r - edge.r + 4) % 4;
+			switch (myRelationshipToEdge)
 			{
-				// I'm a face
-			edge = _edgeRecords[0].ccwEdgeOf(_r, _f);
-			return edge.dual.originVertex;
+				case EdgeRecord.RIGHT_FACE:
+					result = dual.destVertex;
+					break;
+				case EdgeRecord.DEST_VERTEX:
+					result = dual.rightFace;
+					break;
+				case EdgeRecord.LEFT_FACE:
+					result = dual.originVertex;
+					break;
+				case EdgeRecord.ORIGIN_VERTEX:
+					result = dual.leftFace;
+					break;
 			}
 			
-			edge = _edgeRecords[0].leavingEdgeOf(_r, _f);
-			return edge.dual.leftFace;*/
+			return result;
 		}
+	}
+}
+import com.nodename.geom.edgeAlgebra.QuadEdge;
+
+class EdgeLists
+{
+	public var leavingEdges:Vector.<QuadEdge>;
+	public var enteringEdges:Vector.<QuadEdge>;
+	public var ccwEdges:Vector.<QuadEdge>;
+	public var cwEdges:Vector.<QuadEdge>;
+	
+	public function EdgeLists()
+	{
+		leavingEdges = new Vector.<QuadEdge>();
+		enteringEdges = new Vector.<QuadEdge>();
+		ccwEdges = new Vector.<QuadEdge>();
+		cwEdges = new Vector.<QuadEdge>();
 	}
 }

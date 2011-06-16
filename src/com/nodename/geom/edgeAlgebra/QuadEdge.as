@@ -39,8 +39,15 @@ package com.nodename.geom.edgeAlgebra
 		public function get destVertex():Node { return _edgeRecord.node(_r + 1, _f); }
 		
 		// orientation: leftFace and rightFace
-		public function get leftFace():Node { return _edgeRecord.node(_r + 2, _f); }
-		public function get rightFace():Node { return _edgeRecord.node(_r, _f); }
+		public function get leftFace():Node
+		{
+			return _edgeRecord.node(_r + 2, _f);
+		}
+		
+		public function get rightFace():Node
+		{
+			return _edgeRecord.node(_r, _f);
+		}
 		
 		//protected static const LOCK:Object = {};
 		
