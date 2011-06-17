@@ -96,12 +96,7 @@ package flexUnitTests
 		[Test]
 		public function dualDefinition_Face_to_Vertex():void
 		{
-			trace(_edge.edgeRecord);
-			trace(_edge);
-			const leftFaceDualShouldBe:Node = _edge.dual.originVertex;
-			const leftFace:Node = _edge.leftFace;
 			assertThat(_edge.leftFace.dual(_edge), strictlyEqualTo(_edge.dual.originVertex));
-			//assertThat(leftFace.dual, strictlyEqualTo(leftFaceDualShouldBe));
 		}
 		
 		[Test]

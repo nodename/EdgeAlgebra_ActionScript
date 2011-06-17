@@ -94,45 +94,80 @@ package com.nodename.geom.edgeAlgebra
 		
 		public function dNext(exponent:int=1):QuadEdge
 		{
-			// return the QuadEdge immediately following this one counterclockwise in the ring of edges into destVertex
-			return destVertex.nextEnteringEdge(this, exponent);
+			var edge:QuadEdge = this;
+			while (exponent--)
+			{
+				// find the QuadEdge immediately following this one counterclockwise in the ring of edges into destVertex
+				edge = edge.sym().oNext().sym();
+			}
+			return edge;
 		}
 		
 		public function lNext(exponent:int=1):QuadEdge
 		{
-			// return the next counterclockwise QuadEdge with the same left face
-			return leftFace.nextCcwEdge(this, exponent);
+			var edge:QuadEdge = this;
+			while (exponent--)
+			{
+				// find the next counterclockwise QuadEdge with the same left face
+				edge = edge.rot(-1).oNext().rot();
+			}
+			return edge;
 		}
 		
 		public function rNext(exponent:int=1):QuadEdge
 		{
-			// return the next clockwise QuadEdge with the same right face
-			return rightFace.nextCwEdge(this, exponent);
+			var edge:QuadEdge = this;
+			while (exponent--)
+			{
+				// find the next clockwise QuadEdge with the same right face
+				edge = edge.rot().oNext().rot(-1);
+			}
+			return edge;
 		}
 		
 		
 		public function oPrev(exponent:int=1):QuadEdge
 		{
-			// return the QuadEdge immediately following this one clockwise in the ring of edges out of originVertex
-			return oNext(-exponent);
+			var edge:QuadEdge = this;
+			while (exponent--)
+			{
+				// find the QuadEdge immediately following this one clockwise in the ring of edges out of originVertex
+				edge = edge.rot().oNext().rot();
+			}
+			return edge;
 		}
 		
 		public function dPrev(exponent:int=1):QuadEdge
 		{
-			// return the QuadEdge immediately following this one clockwise in the ring of edges into destVertex
-			return dNext(-exponent);
+			var edge:QuadEdge = this;
+			while (exponent--)
+			{
+				// find the QuadEdge immediately following this one clockwise in the ring of edges into destVertex
+				edge = edge.rot(-1).oNext().rot(-1);
+			}
+			return edge;
 		}
 		
 		public function lPrev(exponent:int=1):QuadEdge
 		{
-			// return the next clockwise QuadEdge with the same left face
-			return lNext(-exponent);
+			var edge:QuadEdge = this;
+			while (exponent--)
+			{
+				// find the next clockwise QuadEdge with the same left face
+				edge = edge.oNext().sym();
+			}
+			return edge;
 		}
 		
 		public function rPrev(exponent:int=1):QuadEdge
 		{
-			// return the next clockwise QuadEdge with the same right face
-			return rNext(-exponent);
+			var edge:QuadEdge = this;
+			while (exponent--)
+			{
+				// find the next clockwise QuadEdge with the same right face
+				edge = edge.sym().oNext();
+			}
+			return edge;
 		}
 		
 		public function get dual():QuadEdge

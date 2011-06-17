@@ -71,8 +71,8 @@ package com.nodename.geom.edgeAlgebra
 
 			for (index = 0; index < 4; index++)
 			{
-				var node0:Node = new Node(this, index, 0, index == LEFT_FACE ? node(RIGHT_FACE, 0) : null);
-				var node1:Node = new Node(this, index, 1, index == LEFT_FACE ? node(RIGHT_FACE, 1) : null);
+				var node0:Node = new Node(index, 0, index == LEFT_FACE ? node(RIGHT_FACE, 0) : null);
+				var node1:Node = new Node(index, 1, index == LEFT_FACE ? node(RIGHT_FACE, 1) : null);
 				_nodePairs[index] = new NodePair(node0, node1);
 			}
 			
@@ -86,51 +86,27 @@ package com.nodename.geom.edgeAlgebra
 			}
 			
 			_nodePairs[ORIGIN_VERTEX].node(0)
-				.addLeavingEdge(quadEdge(0, 0))
-				.addCcwEdge(quadEdge(1, 0))
-				.addEnteringEdge(quadEdge(2, 0))					
-				.addCwEdge(quadEdge(3, 0));
+				.addLeavingEdge(quadEdge(0, 0));
 				
 			_nodePairs[ORIGIN_VERTEX].node(1)
-				.addLeavingEdge(quadEdge(0, 1))
-				.addCcwEdge(quadEdge(1, 1))
-				.addEnteringEdge(quadEdge(2, 1))
-				.addCwEdge(quadEdge(3, 1));
+				.addLeavingEdge(quadEdge(0, 1));
 			
 			_nodePairs[DEST_VERTEX].node(0)
-				.addEnteringEdge(quadEdge(0, 0))
-				.addCwEdge(quadEdge(1, 0))
-				.addLeavingEdge(quadEdge(2, 0))
-				.addCcwEdge(quadEdge(3, 0));
+				.addLeavingEdge(quadEdge(2, 0));
 				
 			_nodePairs[DEST_VERTEX].node(1)
-				.addEnteringEdge(quadEdge(0, 1))
-				.addCwEdge(quadEdge(1, 1))
-				.addLeavingEdge(quadEdge(2, 1))
-				.addCcwEdge(quadEdge(3, 1));
+				.addLeavingEdge(quadEdge(2, 1));
 				
 			_nodePairs[RIGHT_FACE].node(0)
-				.addCwEdge(quadEdge(0, 0))
-				.addLeavingEdge(quadEdge(1, 0))
-				.addCcwEdge(quadEdge(2, 0))
-				.addEnteringEdge(quadEdge(3, 0));	
+				.addLeavingEdge(quadEdge(1, 0));
 				
 			_nodePairs[RIGHT_FACE].node(1)
-				.addCwEdge(quadEdge(0, 1))
-				.addLeavingEdge(quadEdge(1, 1))
-				.addCcwEdge(quadEdge(2, 1))
-				.addEnteringEdge(quadEdge(3, 1));
+				.addLeavingEdge(quadEdge(1, 1));
 			
 			_nodePairs[LEFT_FACE].node(0)
-				.addCcwEdge(quadEdge(0, 0))
-				.addEnteringEdge(quadEdge(1, 0))
-				.addCwEdge(quadEdge(2, 0))
 				.addLeavingEdge(quadEdge(3, 0));
 				
 			_nodePairs[LEFT_FACE].node(1)
-				.addCcwEdge(quadEdge(0, 1))
-				.addEnteringEdge(quadEdge(1, 1))
-				.addCwEdge(quadEdge(2, 1))
 				.addLeavingEdge(quadEdge(3, 1));
 
 			
