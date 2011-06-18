@@ -76,6 +76,8 @@ package com.nodename.geom.edgeAlgebra
 			_edgeRecord = edgeRecord;
 			_r = r;
 			_f = f;
+			
+			oNextRef = null;
 		}
 
 		
@@ -96,12 +98,22 @@ package com.nodename.geom.edgeAlgebra
 			return _edgeRecord.quadEdge(_r, _f + exponent);
 		}
 		
-		
+		public var oNextRef:QuadEdge;
 		
 		public function oNext(exponent:int=1):QuadEdge
 		{
-			// return the QuadEdge immediately following this one counterclockwise in the ring of edges out of originVertex
-			return originVertex.nextLeavingEdge(this, exponent);
+			if (exponent < 0)
+			{
+				return oPrev(-exponent);
+			}
+			
+			var edge:QuadEdge = this;
+			while (exponent--)
+			{
+				// find the QuadEdge immediately following this one counterclockwise in the ring of edges out of destVertex
+				edge = edge.oNextRef;
+			}
+			return edge;
 		}
 		
 		public function dNext(exponent:int=1):QuadEdge

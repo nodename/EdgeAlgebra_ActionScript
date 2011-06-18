@@ -21,7 +21,7 @@ package com.nodename.geom.edgeAlgebra
 		
 		private var _edges:Vector.<Vector.<QuadEdge>>;
 		private var _rings:Vector.<Vector.<Ring>>;
-		private var _nextEdges:Vector.<QuadEdge>;
+		//private var _nextEdges:Vector.<QuadEdge>;
 
 		
 		public function ring(rotation:int, f:uint):Ring
@@ -31,7 +31,7 @@ package com.nodename.geom.edgeAlgebra
 		
 		
 		// not using this yet
-		public function edgeONext(edge:QuadEdge, exponent:int):QuadEdge
+		/*public function edgeONext(edge:QuadEdge, exponent:int):QuadEdge
 		{
 			for (var i:uint = 0; i < exponent; i++)
 			{
@@ -40,7 +40,7 @@ package com.nodename.geom.edgeAlgebra
 				edge = _nextEdges[(rotation + f) % 4].rot(f).flip(f);
 			}
 			return edge;
-		}
+		}*/
 		
 		public function quadEdge(rotation:int, f:int):QuadEdge
 		{
@@ -87,37 +87,20 @@ package com.nodename.geom.edgeAlgebra
 					new QuadEdge(this, index, 1)
 				]);
 			}
-
 				
-			ring(0, 0)
-				.addLeavingEdge(quadEdge(1, 0));
-				
-			ring(0, 1)
-				.addLeavingEdge(quadEdge(1, 1));
+			for (var orientation:uint = 0; orientation < 2; orientation++)
+			{
+				quadEdge(0, orientation).oNextRef = quadEdge(0, orientation);
+				quadEdge(1, orientation).oNextRef = quadEdge(3, orientation);
+				quadEdge(2, orientation).oNextRef = quadEdge(2, orientation);
+				quadEdge(3, orientation).oNextRef = quadEdge(1, orientation);
+			}
 			
-			ring(1, 0)
-				.addLeavingEdge(quadEdge(2, 0));
-				
-			ring(1, 1)
-				.addLeavingEdge(quadEdge(2, 1));
-			
-			ring(2, 0)
-				.addLeavingEdge(quadEdge(3, 0));
-				
-			ring(2, 1)
-				.addLeavingEdge(quadEdge(3, 1));
-			
-			ring(3, 0)
-				.addLeavingEdge(quadEdge(0, 0));
-				
-			ring(3, 1)
-				.addLeavingEdge(quadEdge(0, 1));
-
-			_nextEdges = new Vector.<QuadEdge>(4, true);
+			/*_nextEdges = new Vector.<QuadEdge>(4, true);
 			for (index = 0; index < 4; index++)
 			{
 				_nextEdges[index] = quadEdge(index, 0).oNext();
-			}
+			}*/
 		}
 		
 		public function toString():String
