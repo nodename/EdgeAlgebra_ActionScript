@@ -13,6 +13,18 @@ package com.nodename.geom.edgeAlgebra
 			return edgeRecord.e0;
 		}
 		
+/*		public static function splice(a:QuadEdge, b:QuadEdge):void
+		{
+			var aNext:QuadEdge = a.oNext();
+			var bNext:QuadEdge = b.oNext();
+			var alpha:QuadEdge = aNext.rot();
+			var beta:QuadEdge = bNext.rot();
+			var alphaNext:QuadEdge = alpha.oNext();
+			var betaNext:QuadEdge = beta.oNext();
+			
+			
+		}*/
+		
 		private var _edgeRecord:EdgeRecord;
 		public function get edgeRecord():EdgeRecord 
 		{
@@ -35,18 +47,18 @@ package com.nodename.geom.edgeAlgebra
 		}
 
 		// direction: originVertex and destVertex
-		public function get originVertex():Node { return _edgeRecord.node(_r + 3, _f); }
-		public function get destVertex():Node { return _edgeRecord.node(_r + 1, _f); }
+		public function get originVertex():Ring { return _edgeRecord.ring(_r + 3, _f); }
+		public function get destVertex():Ring { return _edgeRecord.ring(_r + 1, _f); }
 		
 		// orientation: leftFace and rightFace
-		public function get leftFace():Node
+		public function get leftFace():Ring
 		{
-			return _edgeRecord.node(_r + 2, _f);
+			return _edgeRecord.ring(_r + 2 + 2 * _f, _f);
 		}
 		
-		public function get rightFace():Node
+		public function get rightFace():Ring
 		{
-			return _edgeRecord.node(_r, _f);
+			return _edgeRecord.ring(_r + 2 * _f, _f);
 		}
 		
 		//protected static const LOCK:Object = {};

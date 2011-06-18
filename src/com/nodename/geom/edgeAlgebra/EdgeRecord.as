@@ -19,31 +19,32 @@ package com.nodename.geom.edgeAlgebra
 		public static const CCW_EDGE:uint = 2;
 		public static const ENTERING_EDGE:uint = 3;*/
 		
-		private var _edgePairs:Vector.<EdgePair>;
-		private var _nodePairs:Vector.<NodePair>;
+		private var _edges:Vector.<Vector.<QuadEdge>>;
+		private var _rings:Vector.<Vector.<Ring>>;
+		private var _nextEdges:Vector.<QuadEdge>;
 
 		
-		public function node(rotation:uint, f:uint):Node
+		public function ring(rotation:int, f:uint):Ring
 		{
-			return _nodePairs[rotation % 4].node(f);
+			return _rings[(rotation + 4) % 4][(f + 2) % 2];
 		}
 		
 		
-		
+		// not using this yet
 		public function edgeONext(edge:QuadEdge, exponent:int):QuadEdge
 		{
 			for (var i:uint = 0; i < exponent; i++)
 			{
 				var rotation:uint = edge.r;
 				var f:uint = edge.orientation;
-				edge = _edgePairs[(rotation + f) % 4].next.rot(f).flip(f);
+				edge = _nextEdges[(rotation + f) % 4].rot(f).flip(f);
 			}
 			return edge;
 		}
 		
-		public function quadEdge(rotation:uint, f:uint):QuadEdge
+		public function quadEdge(rotation:int, f:int):QuadEdge
 		{
-			return _edgePairs[rotation % 4].quadEdge(f);
+			return _edges[(rotation + 4) % 4][(f + 2) % 2];
 		}
 			
 		public function get e0():QuadEdge
@@ -54,8 +55,8 @@ package com.nodename.geom.edgeAlgebra
 		
 		public function dispose():void
 		{
-			_edgePairs = null;
-			_nodePairs = null;
+			_edges = null;
+			_rings = null;
 		}
 		
 		public function EdgeRecord()
@@ -67,58 +68,70 @@ package com.nodename.geom.edgeAlgebra
 		{
 			var index:uint;
 			
-			_nodePairs = new Vector.<NodePair>(4, true);
+			_rings = new Vector.<Vector.<Ring>>(4, true);
 
 			for (index = 0; index < 4; index++)
 			{
-				var node0:Node = new Node(index, 0, index == LEFT_FACE ? node(RIGHT_FACE, 0) : null);
-				var node1:Node = new Node(index, 1, index == LEFT_FACE ? node(RIGHT_FACE, 1) : null);
-				_nodePairs[index] = new NodePair(node0, node1);
+				_rings[index] = Vector.<Ring>([
+					new Ring(index, 0, index == LEFT_FACE ? ring(RIGHT_FACE, 0) : null),
+					new Ring(index, 1, index == LEFT_FACE ? ring(RIGHT_FACE, 1) : null)
+				]);
 			}
 			
-			_edgePairs = new Vector.<EdgePair>(4, true);
+			_edges = new Vector.<Vector.<QuadEdge>>(4, true);
 			
 			for (index = 0; index < 4; index++)
 			{
-				var edge0:QuadEdge = new QuadEdge(this, index, 0);
-				var edge1:QuadEdge = new QuadEdge(this, index, 1);
-				_edgePairs[index] = new EdgePair(edge0, edge1);
+				_edges[index] = Vector.<QuadEdge>([
+					new QuadEdge(this, index, 0),
+					new QuadEdge(this, index, 1)
+				]);
 			}
-			
-			_nodePairs[ORIGIN_VERTEX].node(0)
-				.addLeavingEdge(quadEdge(0, 0));
+
 				
-			_nodePairs[ORIGIN_VERTEX].node(1)
-				.addLeavingEdge(quadEdge(0, 1));
-			
-			_nodePairs[DEST_VERTEX].node(0)
-				.addLeavingEdge(quadEdge(2, 0));
-				
-			_nodePairs[DEST_VERTEX].node(1)
-				.addLeavingEdge(quadEdge(2, 1));
-				
-			_nodePairs[RIGHT_FACE].node(0)
+			ring(0, 0)
 				.addLeavingEdge(quadEdge(1, 0));
 				
-			_nodePairs[RIGHT_FACE].node(1)
+			ring(0, 1)
 				.addLeavingEdge(quadEdge(1, 1));
 			
-			_nodePairs[LEFT_FACE].node(0)
+			ring(1, 0)
+				.addLeavingEdge(quadEdge(2, 0));
+				
+			ring(1, 1)
+				.addLeavingEdge(quadEdge(2, 1));
+			
+			ring(2, 0)
 				.addLeavingEdge(quadEdge(3, 0));
 				
-			_nodePairs[LEFT_FACE].node(1)
+			ring(2, 1)
 				.addLeavingEdge(quadEdge(3, 1));
-
 			
+			ring(3, 0)
+				.addLeavingEdge(quadEdge(0, 0));
+				
+			ring(3, 1)
+				.addLeavingEdge(quadEdge(0, 1));
+
+			_nextEdges = new Vector.<QuadEdge>(4, true);
 			for (index = 0; index < 4; index++)
 			{
-				_edgePairs[index].next = quadEdge(index, 0).oNext();
+				_nextEdges[index] = quadEdge(index, 0).oNext();
 			}
 		}
 		
 		public function toString():String
 		{
-			return "{EdgeRecord:\n" + _edgePairs[0] + "\n\n" + _edgePairs[1] + "\n\n" + _edgePairs[2] + "\n\n" + _edgePairs[3] + "}";
+			return "{EdgeRecord:" +
+				"\n" + _edges[0][0] +
+				"\n" + _edges[0][1] +
+				"\n" + _edges[1][0] +
+				"\n" + _edges[1][1] +
+				"\n" + _edges[2][0] +
+				"\n" + _edges[2][1] +
+				"\n" + _edges[3][0] +
+				"\n" + _edges[3][1] +
+			"\n}";
 		}
 		
 	}

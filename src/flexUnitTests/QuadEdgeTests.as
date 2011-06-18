@@ -1,7 +1,7 @@
 package flexUnitTests
 {
 	import com.nodename.geom.edgeAlgebra.EdgeRecord;
-	import com.nodename.geom.edgeAlgebra.Node;
+	import com.nodename.geom.edgeAlgebra.Ring;
 	import com.nodename.geom.edgeAlgebra.QuadEdge;
 	
 	import flexunit.framework.Assert;
@@ -96,6 +96,8 @@ package flexUnitTests
 		[Test]
 		public function dualDefinition_Face_to_Vertex():void
 		{
+			const dual:QuadEdge = _edge.dual;
+			const left:Ring = _edge.leftFace;
 			assertThat(_edge.leftFace.dual(_edge), strictlyEqualTo(_edge.dual.originVertex));
 		}
 		
@@ -250,10 +252,11 @@ package flexUnitTests
 		[Test]
 		public function leftDefinition():void
 		{
+			trace(_edge.edgeRecord);
 			trace(_edge);
-			const leftFace:Node = _edge.leftFace;
+			const leftFace:Ring = _edge.leftFace;
 			const rotMinus1:QuadEdge = _edge.rot(-1);
-			const originVertex:Node = rotMinus1.originVertex;
+			const originVertex:Ring = rotMinus1.originVertex;
 			//assertThat(_edge.leftFace.equals(_edge.rot(-1).originVertex));
 			assertThat(leftFace.equals(originVertex));
 		}
