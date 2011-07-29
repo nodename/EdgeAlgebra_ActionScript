@@ -5,32 +5,18 @@ package com.nodename.geom.edgeAlgebra
 	import org.hamcrest.object.nullValue;
 
 	// The EdgeRecord represents eight QuadEdges: the four oriented and directed versions of an undirected edge and of its dual
-	public final class EdgeRecord implements IDisposable
+	internal final class EdgeRecord implements IDisposable
 	{
-		// NodeRoles:
-		public static const RIGHT_FACE:uint = 0;
-		public static const DEST_VERTEX:uint = 1;
-		public static const LEFT_FACE:uint = 2;
-		public static const ORIGIN_VERTEX:uint = 3;
-		
-		// EdgeRoles:
-		/*public static const CW_EDGE:uint = 0;
-		public static const LEAVING_EDGE:uint = 1;
-		public static const CCW_EDGE:uint = 2;
-		public static const ENTERING_EDGE:uint = 3;*/
-		
 		private var _edges:Vector.<Vector.<QuadEdge>>;
-		private var _rings:Vector.<Vector.<Ring>>;
-		//private var _nextEdges:Vector.<QuadEdge>;
+		private var _rings:Vector.<Vector.<Node>>;
 
 		
-		public function ring(rotation:int, f:uint):Ring
+		public function ring(rotation:int, f:uint):Node
 		{
 			return _rings[(rotation + 4) % 4][(f + 2) % 2];
 		}
 		
 		
-		// not using this yet
 		/*public function edgeONext(edge:QuadEdge, exponent:int):QuadEdge
 		{
 			for (var i:uint = 0; i < exponent; i++)
@@ -68,13 +54,13 @@ package com.nodename.geom.edgeAlgebra
 		{
 			var index:uint;
 			
-			_rings = new Vector.<Vector.<Ring>>(4, true);
+			_rings = new Vector.<Vector.<Node>>(4, true);
 
 			for (index = 0; index < 4; index++)
 			{
-				_rings[index] = Vector.<Ring>([
-					new Ring(index, 0, index == LEFT_FACE ? ring(RIGHT_FACE, 0) : null),
-					new Ring(index, 1, index == LEFT_FACE ? ring(RIGHT_FACE, 1) : null)
+				_rings[index] = Vector.<Node>([
+					new Node(index, 0, index == 2 ? ring(0, 0) : null),
+					new Node(index, 1, index == 2 ? ring(0, 1) : null)
 				]);
 			}
 			
@@ -95,12 +81,6 @@ package com.nodename.geom.edgeAlgebra
 				quadEdge(2, orientation).oNextRef = quadEdge(2, orientation);
 				quadEdge(3, orientation).oNextRef = quadEdge(1, orientation);
 			}
-			
-			/*_nextEdges = new Vector.<QuadEdge>(4, true);
-			for (index = 0; index < 4; index++)
-			{
-				_nextEdges[index] = quadEdge(index, 0).oNext();
-			}*/
 		}
 		
 		public function toString():String

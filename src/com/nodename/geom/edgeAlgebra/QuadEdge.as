@@ -13,28 +13,33 @@ package com.nodename.geom.edgeAlgebra
 			return edgeRecord.e0;
 		}
 		
-/*		public static function splice(a:QuadEdge, b:QuadEdge):void
+		public static function splice(a:QuadEdge, b:QuadEdge):void
 		{
-			var aNext:QuadEdge = a.oNext();
-			var bNext:QuadEdge = b.oNext();
-			var alpha:QuadEdge = aNext.rot();
-			var beta:QuadEdge = bNext.rot();
-			var alphaNext:QuadEdge = alpha.oNext();
-			var betaNext:QuadEdge = beta.oNext();
+			const aNext:QuadEdge = a.oNext();
+			const bNext:QuadEdge = b.oNext();
+			const alpha:QuadEdge = aNext.rot();
+			const beta:QuadEdge = bNext.rot();
+			const alphaNext:QuadEdge = alpha.oNext();
+			const betaNext:QuadEdge = beta.oNext();
 			
-			
-		}*/
+			a.oNextRef = bNext;
+			b.oNextRef = aNext;
+			alpha.oNextRef = betaNext;
+			beta.oNextRef = alphaNext;
+		}
 		
 		private var _edgeRecord:EdgeRecord;
-		public function get edgeRecord():EdgeRecord 
+		public function quadEdge(rotation:uint, orientation:uint):QuadEdge 
 		{
-			return _edgeRecord;
+			return _edgeRecord.quadEdge(rotation, orientation);
 		}
+		
 		private var _r:uint;
 		public function get r():uint 
 		{
 			return _r;
 		}
+		
 		private var _f:uint;
 		public function get orientation():uint 
 		{
@@ -47,19 +52,12 @@ package com.nodename.geom.edgeAlgebra
 		}
 
 		// direction: originVertex and destVertex
-		public function get originVertex():Ring { return _edgeRecord.ring(_r + 3, _f); }
-		public function get destVertex():Ring { return _edgeRecord.ring(_r + 1, _f); }
+		public function get originVertex():Node { return _edgeRecord.ring(_r + 3, _f); }
+		public function get destVertex():Node { return _edgeRecord.ring(_r + 1, _f); }
 		
 		// orientation: leftFace and rightFace
-		public function get leftFace():Ring
-		{
-			return _edgeRecord.ring(_r + 2 + 2 * _f, _f);
-		}
-		
-		public function get rightFace():Ring
-		{
-			return _edgeRecord.ring(_r + 2 * _f, _f);
-		}
+		public function get leftFace():Node { return _edgeRecord.ring(_r + 2 + 2 * _f, _f); }
+		public function get rightFace():Node { return _edgeRecord.ring(_r + 2 * _f, _f); }
 		
 		//protected static const LOCK:Object = {};
 		
@@ -110,7 +108,7 @@ package com.nodename.geom.edgeAlgebra
 			var edge:QuadEdge = this;
 			while (exponent--)
 			{
-				// find the QuadEdge immediately following this one counterclockwise in the ring of edges out of destVertex
+				// find the QuadEdge immediately following this one counterclockwise in the ring of edges out of originVertex
 				edge = edge.oNextRef;
 			}
 			return edge;
@@ -118,6 +116,11 @@ package com.nodename.geom.edgeAlgebra
 		
 		public function dNext(exponent:int=1):QuadEdge
 		{
+			if (exponent < 0)
+			{
+				return dPrev(-exponent);
+			}
+			
 			var edge:QuadEdge = this;
 			while (exponent--)
 			{
@@ -129,6 +132,11 @@ package com.nodename.geom.edgeAlgebra
 		
 		public function lNext(exponent:int=1):QuadEdge
 		{
+			if (exponent < 0)
+			{
+				return lPrev(-exponent);
+			}
+			
 			var edge:QuadEdge = this;
 			while (exponent--)
 			{
@@ -140,6 +148,11 @@ package com.nodename.geom.edgeAlgebra
 		
 		public function rNext(exponent:int=1):QuadEdge
 		{
+			if (exponent < 0)
+			{
+				return rPrev(-exponent);
+			}
+			
 			var edge:QuadEdge = this;
 			while (exponent--)
 			{

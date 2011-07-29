@@ -1,7 +1,6 @@
 package flexUnitTests
 {
-	import com.nodename.geom.edgeAlgebra.EdgeRecord;
-	import com.nodename.geom.edgeAlgebra.Ring;
+	import com.nodename.geom.edgeAlgebra.Node;
 	import com.nodename.geom.edgeAlgebra.QuadEdge;
 	
 	import flexunit.framework.Assert;
@@ -20,7 +19,6 @@ package flexUnitTests
 		Parameterized;
 
 		private var _edge:QuadEdge;
-		private var _edgeRecord:EdgeRecord;
 		private var _rotation:uint;
 		private var _orientation:uint;
 		
@@ -28,16 +26,15 @@ package flexUnitTests
 		public static function data():Array
 		{
 			const edge:QuadEdge = QuadEdge.makeEdge();
-			const edgeRecord:EdgeRecord = edge.edgeRecord;
 			return [
-				  [edgeRecord.quadEdge(0, 0)]
-				, [edgeRecord.quadEdge(0, 1)]
-				, [edgeRecord.quadEdge(1, 0)]
-				, [edgeRecord.quadEdge(1, 1)]
-				, [edgeRecord.quadEdge(2, 0)]
-				, [edgeRecord.quadEdge(2, 1)]
-				, [edgeRecord.quadEdge(3, 0)]
-				, [edgeRecord.quadEdge(3, 1)]
+				  [edge.quadEdge(0, 0)]
+				, [edge.quadEdge(0, 1)]
+				, [edge.quadEdge(1, 0)]
+				, [edge.quadEdge(1, 1)]
+				, [edge.quadEdge(2, 0)]
+				, [edge.quadEdge(2, 1)]
+				, [edge.quadEdge(3, 0)]
+				, [edge.quadEdge(3, 1)]
 			];
 		}
 		
@@ -49,7 +46,6 @@ package flexUnitTests
 		[Before]
 		public function setUp():void
 		{
-			_edgeRecord = _edge.edgeRecord;
 			_rotation = _edge.r;
 			_orientation = _edge.orientation;
 		}
@@ -97,7 +93,7 @@ package flexUnitTests
 		public function dualDefinition_Face_to_Vertex():void
 		{
 			const dual:QuadEdge = _edge.dual;
-			const left:Ring = _edge.leftFace;
+			const left:Node = _edge.leftFace;
 			assertThat(_edge.leftFace.dual(_edge), strictlyEqualTo(_edge.dual.originVertex));
 		}
 		
@@ -252,11 +248,10 @@ package flexUnitTests
 		[Test]
 		public function leftDefinition():void
 		{
-			trace(_edge.edgeRecord);
 			trace(_edge);
-			const leftFace:Ring = _edge.leftFace;
+			const leftFace:Node = _edge.leftFace;
 			const rotMinus1:QuadEdge = _edge.rot(-1);
-			const originVertex:Ring = rotMinus1.originVertex;
+			const originVertex:Node = rotMinus1.originVertex;
 			//assertThat(_edge.leftFace.equals(_edge.rot(-1).originVertex));
 			assertThat(leftFace.equals(originVertex));
 		}
@@ -326,7 +321,7 @@ package flexUnitTests
 		[Test]
 		public function oNextDefinition():void
 		{
-			const otherEdge:QuadEdge = _edgeRecord.quadEdge(_rotation, 0);
+			const otherEdge:QuadEdge = _edge.quadEdge(_rotation, 0);
 			assertThat(given((_orientation == 1),
 				(_edge.oNext(), strictlyEqualTo(otherEdge.oNext(-1).flip()))));
 		}
@@ -334,13 +329,19 @@ package flexUnitTests
 		[Test]
 		public function symDefinition():void
 		{
-			assertThat(_edge.sym(), strictlyEqualTo(_edgeRecord.quadEdge(_rotation + 2, _orientation)));
+			assertThat(_edge.sym(), strictlyEqualTo(_edge.quadEdge(_rotation + 2, _orientation)));
 		}
 		
 		[Test]
 		public function rotMinus1Definition():void
 		{
-			assertThat(_edge.rot(-1), strictlyEqualTo(_edgeRecord.quadEdge(_rotation + 3 + 2 * _orientation, _orientation)));
+			assertThat(_edge.rot(-1), strictlyEqualTo(_edge.quadEdge(_rotation + 3 + 2 * _orientation, _orientation)));
+		}
+		
+		[Ignore]
+		[Test]
+		public function spliceIsItsOwnInverse():void
+		{
 		}
 	}
 }

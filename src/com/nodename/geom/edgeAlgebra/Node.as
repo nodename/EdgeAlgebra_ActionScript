@@ -3,8 +3,14 @@ package com.nodename.geom.edgeAlgebra
 	import com.nodename.utils.IDisposable;
 
 	// This class represents either a vertex or a face of the graph
-	public final class Ring implements IDisposable
+	public final class Node implements IDisposable
 	{
+		// node roles:
+		public static const RIGHT_FACE:uint = 0;
+		public static const DEST_VERTEX:uint = 1;
+		public static const LEFT_FACE:uint = 2;
+		public static const ORIGIN_VERTEX:uint = 3;
+		
 		private var _uniqueNode:Object;
 		
 		private var _r:uint;
@@ -17,7 +23,7 @@ package com.nodename.geom.edgeAlgebra
 		
 		private static var NEXT_INDEX:uint = 0;
 		public var index:uint;
-		public function Ring(r:uint, f:uint, cloneOf:Ring=null)
+		public function Node(r:uint, f:uint, cloneOf:Node=null)
 		{
 			index = NEXT_INDEX++;
 			_uniqueNode = cloneOf ? cloneOf._uniqueNode : {};
@@ -26,7 +32,7 @@ package com.nodename.geom.edgeAlgebra
 			_f = f;
 		}
 		
-		public function equals(other:Ring):Boolean
+		public function equals(other:Node):Boolean
 		{
 			return other._uniqueNode == this._uniqueNode;
 		}
@@ -37,25 +43,25 @@ package com.nodename.geom.edgeAlgebra
 		}
 		
 		// TODO revisit this. It passes all current tests but it's not done
-		public function dual(edge:QuadEdge):Ring
+		public function dual(edge:QuadEdge):Node
 		{
-			var result:Ring = null;
+			var result:Node = null;
 			var dual:QuadEdge = edge.dual;
 			const myRelationshipToEdge:uint = (_r - edge.r + 4) % 4;
 			switch (myRelationshipToEdge)
 			{
-				case EdgeRecord.RIGHT_FACE:
+				case RIGHT_FACE:
 					result = _f == 0 ? dual.destVertex : dual.originVertex;
 					//result = dual.destVertex;
 					break;
-				case EdgeRecord.DEST_VERTEX:
+				case DEST_VERTEX:
 					result = dual.rightFace;
 					break;
-				case EdgeRecord.LEFT_FACE:
+				case LEFT_FACE:
 					result = _f == 0 ? dual.originVertex : dual.destVertex;
 					//result = dual.originVertex;
 					break;
-				case EdgeRecord.ORIGIN_VERTEX:
+				case ORIGIN_VERTEX:
 					result = dual.leftFace;
 					break;
 			}

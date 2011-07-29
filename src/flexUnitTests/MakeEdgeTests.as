@@ -4,7 +4,6 @@ package flexUnitTests
 	
 	import org.flexunit.assertThat;
 	import org.hamcrest.core.not;
-	import org.hamcrest.object.equalTo;
 	import org.hamcrest.object.strictlyEqualTo;
 
 	// These tests must hold for a QuadEdge newly created by makeEdge()
@@ -30,6 +29,7 @@ package flexUnitTests
 		[BeforeClass]
 		public static function setUpBeforeClass():void
 		{
+
 		}
 		
 		[AfterClass]
